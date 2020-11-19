@@ -1,11 +1,8 @@
 import * as types from '../types/users';
 
 
-export const startFetchingUsers = teamId => ({
+export const startFetchingUsers = () => ({
     type: types.FETCH_USERS_STARTED,
-    payload: {
-        teamId,
-    }
 });
 
 export const completeFetchingUsers = (entities, order) => ({
