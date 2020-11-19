@@ -3,9 +3,10 @@ export const isSuccessful = statusCode => {
     switch(statusCode) {
         case 200:
         case 201:
-        return true;
+            return true;
+        default:
+            return false;
     };
-    return false;
 };
 
 export const isSimpleSuccessful = statusCode => {
