@@ -11,7 +11,9 @@ const Login = ({
     onSubmit,
     getUsers,
     logout,
+    refresh,
     users,
+    token,
     isLoading,
     error = null,
     isAuthenticated = false
@@ -80,6 +82,17 @@ const Login = ({
                     </table>
                 </div>
             </div>
+            <div className="tokenContainer">
+                <div>
+                    <button className="btnRefresh" onClick={() => refresh()}>Refresh</button>
+                </div>
+                <div className="token">
+                    {
+                        <p>{token}</p>
+                    }
+                    
+                </div>
+            </div>
         </div>
     )
 }
@@ -90,6 +103,7 @@ export default connect(
         error: selectors.getAuthenticatingError(state),
         isAuthenticated: selectors.isAuthenticated(state),
         users: selectors.getUsers(state),
+        token: selectors.getAuthToken(state),
     }),
     dispatch => ({
         onSubmit(username, password) {
@@ -100,6 +114,9 @@ export default connect(
         },
         logout(){
             dispatch(actions.logout());
+        },
+        refresh(){
+            dispatch(actions.startTokenRefresh());
         }
 
     }),
