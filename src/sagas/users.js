@@ -19,32 +19,29 @@ import {
 function* fetchUsers(action) {
     try {
         const isAuth = yield select(selectors.isAuthenticated);
-
-        if (isAuth) {
-            const token = yield select(selectors.getAuthToken);
-            const response = yield call(
-                fetch,
-                `${API_BASE_URL}/users/`,
-                {
-                    method: 'GET',
-                    headers:{
-                        'Content-Type': 'application/json',
-                        'Authorization': `JET ${token}`,
-                    },
+        const token = yield select(selectors.getAuthToken);
+        const response = yield call(
+            fetch,
+            `${API_BASE_URL}/users/`,
+            {
+                method: 'GET',
+                headers:{
+                    'Content-Type': 'application/json',
+                    'Authorization': `JET ${token}`,
                 },
-            );
+            },
+        );
 
-            if (http.isSuccessful(response.status)) {
-                const jsonResult = yield response.json();
-                const {
-                    entities: { users },
-                    result,
-                } = normalize(jsonResult, schemas.users);
-                yield put(actions.completeFetchingUsers(users, result));
-            } else {
-                const { non_field_errors } = yield response.json();
-                yield put(actions.failFetchingUsers(non_field_errors[0]));
-            }
+        if (http.isSuccessful(response.status)) {
+            const jsonResult = yield response.json();
+            const {
+                entities: { users },
+                result,
+            } = normalize(jsonResult, schemas.users);
+            yield put(actions.completeFetchingUsers(users, result));
+        } else {
+            const { non_field_errors } = yield response.json();
+            yield put(actions.failFetchingUsers(non_field_errors[0]));
         }
     } catch (error) {
         yield put(actions.failFetchingUsers('Connection failed!'));
